@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Trash2, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import {
   Post, Analytics, BRAND_CONTEXTS, POST_FORMATS, POST_STATUSES, STATUS_LABELS,
@@ -157,7 +158,7 @@ export default function PostModal({ post, initialStatus, onSave, onDelete, onClo
 
   const isEditing = !!post;
 
-  return (
+  const modal = (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
       <div className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
 
@@ -485,4 +486,6 @@ export default function PostModal({ post, initialStatus, onSave, onDelete, onClo
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

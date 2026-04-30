@@ -1,12 +1,13 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { usePosts } from '@/hooks/usePosts';
 import { useProfile } from '@/hooks/useProfile';
 import { Post, STATUS_LABELS, BRAND_COLORS, BrandContext, autoExcerpt } from '@/types';
-import { FileText, Calendar, TrendingUp, AlertTriangle, Eye, ThumbsUp, Zap } from 'lucide-react';
+import { FileText, Calendar, TrendingUp, AlertTriangle, Eye, ThumbsUp, Zap, Plus } from 'lucide-react';
 import { startOfWeek, endOfWeek } from 'date-fns';
 import TimeGreeting from './TimeGreeting';
+import PostModal from '@/components/ui/PostModal';
 
 function StatCard({ label, value, icon: Icon, gradient, sub }: { label: string; value: string | number; icon: React.ElementType; gradient: string; sub?: string }) {
   return (
@@ -27,8 +28,9 @@ function StatCard({ label, value, icon: Icon, gradient, sub }: { label: string; 
 }
 
 export default function DashboardView() {
-  const { posts, loading } = usePosts();
+  const { posts, loading, createPost } = usePosts();
   const { activeProfile, isAllProfiles } = useProfile();
+  const [showNewPost, setShowNewPost] = useState(false);
 
   const stats = useMemo(() => {
     const now = new Date();
@@ -75,6 +77,16 @@ export default function DashboardView() {
       {/* Pull full-bleed: break out of layout's px-8 and top gap */}
       <div className="-mx-8 mb-8" style={{ marginTop: 'calc(-32px)' }}>
         <TimeGreeting />
+      </div>
+
+      {/* New Post CTA */}
+      <div className="mb-6 flex justify-end">
+        <button
+          onClick={() => setShowNewPost(true)}
+          className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-200 hover:bg-blue-700 transition-colors"
+        >
+          <Plus className="h-4 w-4" /> New Post
+        </button>
       </div>
 
       <div className="space-y-6">
@@ -187,6 +199,14 @@ export default function DashboardView() {
         </div>
 
       </div>
+
+      {showNewPost && (
+        <PostModal
+          post={null}
+          onSave={async (data) => { const r = await createPost(data); setShowNewPost(false); return r; }}
+          onClose={() => setShowNewPost(false)}
+        />
+      )}
     </div>
   );
 }

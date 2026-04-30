@@ -79,7 +79,7 @@ export default function BoardView() {
                   </div>
                   <button
                     onClick={() => openCreate(col.status)}
-                    className="rounded-md p-1 text-white/70 transition-colors hover:bg-white/20 hover:text-white"
+                    className="rounded-md p-1 opacity-50 transition-colors hover:bg-black/10 hover:opacity-100"
                     title={`Add to ${col.label}`}
                   >
                     <Plus className="h-4 w-4" />
