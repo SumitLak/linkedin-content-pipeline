@@ -92,7 +92,7 @@ export default function BoardView() {
                     <div
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className={`flex-1 space-y-2 px-2.5 pb-3 transition-colors ${snapshot.isDraggingOver ? 'bg-white/30' : ''}`}
+                      className={`flex-1 space-y-2.5 px-2.5 pt-3 pb-3 transition-colors ${snapshot.isDraggingOver ? 'bg-white/30' : ''}`}
                       style={{ minHeight: 80 }}
                     >
                       {colPosts.length === 0 && !snapshot.isDraggingOver && (
