@@ -96,6 +96,22 @@ export default function LibraryView() {
 
   return (
     <>
+      {/* Page header */}
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 shadow-md shadow-blue-200">
+              <Search className="h-5 w-5 text-white" />
+            </div>
+            <h1 className="text-2xl font-black text-gray-900 tracking-tight">
+              Library
+              <span className="ml-2 text-lg font-light text-gray-400">· {posts.length} posts</span>
+            </h1>
+          </div>
+          <p className="mt-1 ml-11 text-sm text-gray-400">All your LinkedIn content in one place</p>
+        </div>
+      </div>
+
       {/* Toolbar */}
       <div className="mb-5 flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-52">
@@ -150,12 +166,12 @@ export default function LibraryView() {
       )}
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b bg-gray-50">
+            <tr className="bg-gradient-to-r from-blue-600 to-indigo-600">
               {['Posting Date','Day','Internal Title / Hook','Excerpt','Brand','Format','Asset','Status','LinkedIn','Insp.'].map(h => (
-                <th key={h} className="whitespace-nowrap px-3 py-3 text-left text-xs font-semibold text-gray-500">{h}</th>
+                <th key={h} className="whitespace-nowrap px-3 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-white/90">{h}</th>
               ))}
             </tr>
           </thead>
@@ -165,7 +181,7 @@ export default function LibraryView() {
                 {search || hasFilters ? 'No posts match your filters.' : 'No posts yet. Click New Post to begin.'}
               </td></tr>
             ) : filtered.map(post => (
-              <tr key={post.id} className="border-b transition-colors hover:bg-gray-50 cursor-pointer" onClick={() => openEdit(post)}>
+              <tr key={post.id} className="border-b border-gray-100 cursor-pointer transition-colors hover:bg-blue-50/40" onClick={() => openEdit(post)}>
                 <td className="px-3 py-2.5 text-gray-700 whitespace-nowrap">{post.posting_date || '—'}</td>
                 <td className="px-3 py-2.5 text-gray-500 whitespace-nowrap">{post.posting_day?.slice(0, 3) || '—'}</td>
                 <td className="px-3 py-2.5 max-w-[160px]">

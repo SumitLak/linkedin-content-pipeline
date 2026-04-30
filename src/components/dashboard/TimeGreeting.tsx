@@ -41,46 +41,60 @@ const CONFIG: Record<TimeOfDay, {
   bg: string; dark: boolean; particles: string[]; particleColor: string;
 }> = {
   morning: {
+    // Bright sunny countryside road — vivid blue sky, golden sun glow, lush green base
     label: 'MORNING',
     greeting: 'Good Morning',
     emoji: '🌅',
-    bg: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 30%, #fde68a 60%, #fdba74 100%)',
+    bg: [
+      'radial-gradient(ellipse 60% 40% at 52% 18%, #ffffff 0%, #fff9c4 6%, #ffe082 16%, #64b5f6 36%, #1976d2 62%, #0d47a1 100%)',
+      'linear-gradient(180deg, #1565c0 0%, #42a5f5 35%, #aee6f8 58%, #c8e6c9 78%, #388e3c 100%)',
+    ].join(', '),
     dark: true,
-    particles: ['✦', '☀', '✦', '🌸', '✦'],
-    particleColor: 'rgba(180,90,0,0.5)',
+    particles: ['✦', '☀', '🌿', '🌸', '✦'],
+    particleColor: 'rgba(255,220,60,0.8)',
   },
   afternoon: {
+    // Orange sun-burst — brilliant amber-white core, deep burnt orange horizon
     label: 'AFTERNOON',
     greeting: 'Good Afternoon',
     emoji: '☀️',
-    bg: 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 30%, #38bdf8 60%, #7dd3fc 100%)',
+    bg: [
+      'radial-gradient(ellipse 55% 50% at 22% 18%, #ffffff 0%, #fff9c4 4%, #ffee58 12%, #ffb300 26%, #ff8f00 50%, #e65100 80%, #bf360c 100%)',
+      'linear-gradient(160deg, #ff9800 0%, #ff6d00 30%, #e64a19 60%, #bf360c 100%)',
+    ].join(', '),
     dark: true,
-    particles: ['☁', '✦', '☁', '✦', '🌤'],
-    particleColor: 'rgba(255,255,255,0.6)',
+    particles: ['☀', '✦', '🔆', '✦', '🌤'],
+    particleColor: 'rgba(255,255,200,0.9)',
   },
   evening: {
+    // Deep purple night sky fading to fiery orange-red horizon with mountain silhouette feel
     label: 'EVENING',
     greeting: 'Good Evening',
     emoji: '🌆',
-    bg: 'linear-gradient(135deg, #dc2626 0%, #f97316 25%, #ec4899 55%, #7c3aed 100%)',
+    bg: [
+      'linear-gradient(180deg, #0d0030 0%, #1a0050 12%, #3d0070 25%, #7b1fa2 42%, #c62828 58%, #e53935 68%, #ef6c00 80%, #f9a825 90%, #c67c32 100%)',
+    ].join(', '),
     dark: false,
     particles: ['★', '✦', '★', '✦', '🌙'],
-    particleColor: 'rgba(255,240,180,0.7)',
+    particleColor: 'rgba(255,220,150,0.85)',
   },
   night: {
+    // Starry lake night — deep navy sky, teal mid-band, warm amber horizon glow, dark hills
     label: 'NIGHT',
     greeting: 'Good Night',
     emoji: '🌙',
-    bg: 'linear-gradient(135deg, #0f0c29 0%, #302b63 45%, #1e3a8a 100%)',
+    bg: [
+      'linear-gradient(180deg, #010b1f 0%, #020d2a 18%, #051a3d 35%, #0a2850 52%, #0d3060 62%, #7b4520 78%, #c27840 88%, #d48c50 93%, #1a1008 100%)',
+    ].join(', '),
     dark: false,
     particles: ['★', '✦', '★', '✦', '★'],
-    particleColor: 'rgba(255,255,255,0.85)',
+    particleColor: 'rgba(255,255,255,0.9)',
   },
 };
 
 function Stars() {
   const stars = useMemo(() =>
-    Array.from({ length: 35 }, (_, i) => ({
+    Array.from({ length: 80 }, (_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
       top:  `${Math.random() * 100}%`,
@@ -128,11 +142,12 @@ export default function TimeGreeting() {
 
   return (
     <div
-      className="relative overflow-hidden greeting-bg"
+      className="relative overflow-hidden"
       style={{
-        backgroundImage: cfg.bg,
-        animation: 'gradientShift 10s ease infinite',
-        minHeight: 260,
+        background: cfg.bg,
+        backgroundSize: '300% 300%',
+        animation: 'gradientShift 12s ease infinite',
+        minHeight: 280,
       }}
     >
       {/* Night stars */}
