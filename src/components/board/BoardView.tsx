@@ -1,0 +1,138 @@
+'use client';
+
+import { useState } from 'react';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { Plus } from 'lucide-react';
+import { usePosts } from '@/hooks/usePosts';
+import { BOARD_COLUMNS, PostStatus, Post } from '@/types';
+import PostCard from '@/components/ui/PostCard';
+import PostModal from '@/components/ui/PostModal';
+
+export default function BoardView() {
+  const { posts, loading, updatePostStatus, createPost, updatePost, deletePost } = usePosts();
+  const [showModal, setShowModal] = useState(false);
+  const [modalStatus, setModalStatus] = useState<PostStatus>('ideation');
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+
+  function handleDragEnd(result: DropResult) {
+    if (!result.destination) return;
+    const newStatus = result.destination.droppableId as PostStatus;
+    if (newStatus !== result.source.droppableId) {
+      updatePostStatus(result.draggableId, newStatus);
+    }
+  }
+
+  function openCreate(status: PostStatus) {
+    setSelectedPost(null);
+    setModalStatus(status);
+    setShowModal(true);
+  }
+
+  function openEdit(post: Post) {
+    setSelectedPost(post);
+    setShowModal(true);
+  }
+
+  async function handleSave(data: Partial<Post>): Promise<Post | null | undefined> {
+    let result;
+    if (selectedPost) {
+      result = await updatePost(selectedPost.id, data);
+    } else {
+      result = await createPost(data);
+    }
+    setShowModal(false);
+    setSelectedPost(null);
+    return result;
+  }
+
+  async function handleDelete(id: string) {
+    await deletePost(id);
+  }
+
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 'calc(100vh - 7rem)' }}>
+          {BOARD_COLUMNS.map(col => {
+            const colPosts = posts.filter(p => p.status === col.status);
+            return (
+              <div
+                key={col.status}
+                className={`flex w-72 min-w-[288px] flex-col rounded-2xl ${col.colBg} transition-colors`}
+              >
+                {/* Column header */}
+                <div className="flex items-center justify-between px-3.5 py-3">
+                  <div className="flex items-center gap-2">
+                    <span className={`rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${col.headerBg}`}>
+                      {col.label}
+                    </span>
+                    <span className="text-xs font-semibold text-gray-400">{colPosts.length}</span>
+                  </div>
+                  <button
+                    onClick={() => openCreate(col.status)}
+                    className="rounded-lg p-1 text-gray-400 hover:bg-white/60 hover:text-gray-700 transition-colors"
+                    title={`Add to ${col.label}`}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                </div>
+
+                {/* Cards */}
+                <Droppable droppableId={col.status}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={`flex-1 space-y-2 px-2.5 pb-3 transition-colors ${snapshot.isDraggingOver ? 'bg-white/30' : ''}`}
+                      style={{ minHeight: 80 }}
+                    >
+                      {colPosts.length === 0 && !snapshot.isDraggingOver && (
+                        <p className="mt-4 text-center text-[11px] text-gray-400 italic">{col.emptyText}</p>
+                      )}
+                      {colPosts.map((post, index) => (
+                        <Draggable key={post.id} draggableId={post.id} index={index}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <PostCard
+                                post={post}
+                                isDragging={snapshot.isDragging}
+                                onClick={openEdit}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
+            );
+          })}
+        </div>
+      </DragDropContext>
+
+      {showModal && (
+        <PostModal
+          post={selectedPost}
+          initialStatus={modalStatus}
+          onSave={handleSave}
+          onDelete={selectedPost ? handleDelete : undefined}
+          onClose={() => { setShowModal(false); setSelectedPost(null); }}
+        />
+      )}
+    </>
+  );
+}
