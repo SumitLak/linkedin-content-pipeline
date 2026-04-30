@@ -11,19 +11,19 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const isBgPage = pathname !== '/'; // apply to Board, Calendar, Library (everything except Dashboard)
 
   return (
-    <div className="min-h-screen">
+    <div
+      className="min-h-screen"
+      style={isBgPage && bgUrl ? {
+        backgroundImage: `url(${bgUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      } : undefined}
+    >
       <TopBar />
       <main
         className="px-8 pb-10"
-        style={{
-          paddingTop: 'calc(72px + 32px)',
-          ...(isBgPage && bgUrl ? {
-            backgroundImage: `url(${bgUrl})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-          } : {}),
-        }}
+        style={{ paddingTop: 'calc(72px + 32px)' }}
       >
         {/* Frosted content overlay when background image is active */}
         {isBgPage && bgUrl ? (
