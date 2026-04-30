@@ -75,11 +75,11 @@ export const STATUS_COLORS: Record<PostStatus, string> = {
 };
 
 export const BOARD_COLUMNS: { status: PostStatus; label: string; colBg: string; headerBg: string; accentBar: string; emptyText: string }[] = [
-  { status: 'ideation',        label: 'Ideation',        colBg: 'bg-violet-50',  headerBg: 'bg-violet-600 text-white',  accentBar: 'bg-violet-500',  emptyText: 'Drop your ideas here' },
-  { status: 'scheduled',       label: 'Scheduled',       colBg: 'bg-amber-50',   headerBg: 'bg-amber-500  text-white',  accentBar: 'bg-amber-400',   emptyText: 'Posts ready to go live' },
-  { status: 'live',            label: '🟢 Live',          colBg: 'bg-emerald-50', headerBg: 'bg-emerald-600 text-white', accentBar: 'bg-emerald-500', emptyText: 'Posts published on LinkedIn' },
-  { status: 'analytics_added', label: 'Analytics Added', colBg: 'bg-blue-50',    headerBg: 'bg-blue-600   text-white',  accentBar: 'bg-blue-500',    emptyText: 'Analytics tracked ✓' },
-  { status: 'archived',        label: 'Archived',        colBg: 'bg-gray-100',   headerBg: 'bg-gray-500   text-white',  accentBar: 'bg-gray-400',    emptyText: 'Archived posts' },
+  { status: 'ideation',        label: 'Ideation',        colBg: 'bg-violet-50/60',  headerBg: 'bg-violet-100 text-violet-800',  accentBar: 'bg-violet-400',  emptyText: 'Drop your ideas here' },
+  { status: 'scheduled',       label: 'Scheduled',       colBg: 'bg-amber-50/60',   headerBg: 'bg-amber-100  text-amber-800',   accentBar: 'bg-amber-400',   emptyText: 'Posts ready to go live' },
+  { status: 'live',            label: '🟢 Live',          colBg: 'bg-emerald-50/60', headerBg: 'bg-emerald-100 text-emerald-800', accentBar: 'bg-emerald-400', emptyText: 'Posts published on LinkedIn' },
+  { status: 'analytics_added', label: 'Analytics Added', colBg: 'bg-blue-50/60',    headerBg: 'bg-blue-100   text-blue-800',    accentBar: 'bg-blue-400',    emptyText: 'Analytics tracked ✓' },
+  { status: 'archived',        label: 'Archived',        colBg: 'bg-gray-50',        headerBg: 'bg-gray-100   text-gray-600',    accentBar: 'bg-gray-300',    emptyText: 'Archived posts' },
 ];
 
 export const BRAND_COLORS: Record<BrandContext, string> = {
