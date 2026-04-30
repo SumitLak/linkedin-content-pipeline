@@ -52,13 +52,13 @@ export default function TopBar() {
       <div className="flex h-[72px] items-stretch px-8 gap-8">
 
         {/* ── Logo ── */}
-        <Link href="/" className="flex items-center gap-3 pr-8 border-r border-blue-100 shrink-0 self-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 shadow-md">
-            <span className="text-sm font-black text-white tracking-tight">in</span>
+        <Link href="/" className="flex items-center gap-4 pr-8 border-r border-blue-100 shrink-0 self-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 shadow-md">
+            <span className="text-lg font-black text-white tracking-tight">in</span>
           </div>
           <div>
-            <p className="text-[15px] font-black leading-tight text-blue-900 tracking-tight">LinkedIn</p>
-            <p className="text-[11px] font-semibold leading-tight text-blue-400 tracking-wide uppercase">Content Pipeline</p>
+            <p className="text-[18px] font-black leading-tight text-blue-900 tracking-tight">LinkedIn</p>
+            <p className="text-[12px] font-bold leading-tight text-blue-400 tracking-widest uppercase">Content Pipeline</p>
           </div>
         </Link>
 
