@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
   ChevronDown, Users, Camera,
-  LayoutDashboard, Columns3, CalendarDays, Library,
+  LayoutDashboard, Columns3, CalendarDays, Library, Settings2,
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { clsx } from 'clsx';
@@ -84,8 +84,24 @@ export default function TopBar() {
           })}
         </nav>
 
+        {/* ── Customise icon ── */}
+        <div className="shrink-0 self-center">
+          <Link
+            href="/customise"
+            className={clsx(
+              'flex items-center justify-center h-10 w-10 rounded-xl transition-colors border-2',
+              pathname === '/customise'
+                ? 'border-blue-200 bg-blue-50 text-blue-700'
+                : 'border-transparent text-gray-400 hover:bg-gray-100 hover:text-gray-700'
+            )}
+            title="Customise"
+          >
+            <Settings2 className="h-5 w-5" />
+          </Link>
+        </div>
+
         {/* ── Profile switcher ── */}
-        <div ref={ref} className="relative ml-auto shrink-0 self-center">
+        <div ref={ref} className="relative shrink-0 self-center">
           <button
             onClick={() => setOpen(!open)}
             className="flex items-center gap-3 rounded-xl border-2 border-blue-100 bg-blue-50 px-4 py-2.5 transition-all hover:border-blue-300 hover:bg-blue-100"

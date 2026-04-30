@@ -7,8 +7,6 @@ import { Post, STATUS_LABELS, BRAND_COLORS, BrandContext, autoExcerpt } from '@/
 import { FileText, Calendar, TrendingUp, AlertTriangle, Eye, ThumbsUp, Zap } from 'lucide-react';
 import { startOfWeek, endOfWeek } from 'date-fns';
 import TimeGreeting from './TimeGreeting';
-import PageBackgroundUpload from './PageBackgroundUpload';
-import DashboardBannerSettings from './DashboardBannerSettings';
 
 function StatCard({ label, value, icon: Icon, gradient, sub }: { label: string; value: string | number; icon: React.ElementType; gradient: string; sub?: string }) {
   return (
@@ -188,11 +186,6 @@ export default function DashboardView() {
           </div>
         </div>
 
-        {/* ── Customisation settings ── */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <DashboardBannerSettings />
-          <PageBackgroundUpload />
-        </div>
       </div>
     </div>
   );
