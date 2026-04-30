@@ -60,7 +60,8 @@ export default function BoardView() {
   return (
     <>
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 'calc(100vh - 7rem)' }}>
+        {/* px-8 on the scroll container keeps equal padding on both sides even when overflowing */}
+        <div className="-mx-8 flex gap-3 overflow-x-auto px-8 pb-6" style={{ minHeight: 'calc(100vh - 7rem)' }}>
           {BOARD_COLUMNS.map(col => {
             const colPosts = posts.filter(p => p.status === col.status);
             return (
