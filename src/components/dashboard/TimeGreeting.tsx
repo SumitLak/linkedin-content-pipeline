@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useProfile } from '@/hooks/useProfile';
+import { useBannerSettings } from '@/hooks/useBannerSettings';
 
 const QUOTES = [
   { text: "Your brand is what people say about you when you're not in the room.", author: "Jeff Bezos" },
@@ -123,6 +124,7 @@ function Stars() {
 
 export default function TimeGreeting() {
   const { activeProfile } = useProfile();
+  const { bannerUrls } = useBannerSettings();
   const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>('morning');
   const [mounted, setMounted] = useState(false);
   const quote = useMemo(() => QUOTES[Math.floor(Math.random() * QUOTES.length)], []);
@@ -135,23 +137,33 @@ export default function TimeGreeting() {
   }, []);
 
   const cfg = CONFIG[timeOfDay];
+  const customImage = bannerUrls[timeOfDay];
   const firstName = activeProfile?.name?.split(' ')[0] || 'there';
-  const textColor = cfg.dark ? 'rgba(0,0,0,0.85)' : '#ffffff';
-  const subColor  = cfg.dark ? 'rgba(0,0,0,0.6)'  : 'rgba(255,255,255,0.85)';
-  const metaColor = cfg.dark ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.6)';
+  const isDark = customImage ? false : cfg.dark; // custom images always use white text (overlay darkens bg)
+  const textColor = isDark ? 'rgba(0,0,0,0.85)' : '#ffffff';
+  const subColor  = isDark ? 'rgba(0,0,0,0.6)'  : 'rgba(255,255,255,0.85)';
+  const metaColor = isDark ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.6)';
 
   return (
     <div
       className="relative overflow-hidden"
-      style={{
+      style={customImage ? {
+        backgroundImage: `url(${customImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        minHeight: 280,
+      } : {
         background: cfg.bg,
         backgroundSize: '300% 300%',
         animation: 'gradientShift 12s ease infinite',
         minHeight: 280,
       }}
     >
-      {/* Night stars */}
-      {mounted && timeOfDay === 'night' && <Stars />}
+      {/* Darkening overlay for custom images so text stays readable */}
+      {customImage && <div className="absolute inset-0 bg-black/35" />}
+
+      {/* Night stars (gradient mode only) */}
+      {mounted && !customImage && timeOfDay === 'night' && <Stars />}
 
       {/* Backdrop time-of-day label */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden select-none" aria-hidden>
