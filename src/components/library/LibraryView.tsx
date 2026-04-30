@@ -97,30 +97,30 @@ export default function LibraryView() {
   return (
     <>
       {/* Toolbar */}
-      <div className="mb-3 flex flex-wrap items-center gap-2">
+      <div className="mb-5 flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-52">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-400" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search posts, excerpts, asset names, notes…"
-            className="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-xl border-2 border-blue-200 bg-white py-2.5 pl-10 pr-4 text-sm shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
           />
         </div>
-        <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${hasFilters ? 'border-blue-300 bg-blue-50 text-blue-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
+        <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1.5 rounded-xl border-2 px-4 py-2.5 text-sm font-medium transition-colors ${hasFilters ? 'border-blue-300 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700'}`}>
           <Filter className="h-4 w-4" />
           Filters
           {hasFilters && <button onClick={e => { e.stopPropagation(); clearFilters(); }} className="ml-1"><X className="h-3 w-3" /></button>}
         </button>
-        <button onClick={handleExport} className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+        <button onClick={handleExport} className="flex items-center gap-1.5 rounded-xl border-2 border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700">
           <Download className="h-4 w-4" /> Export
         </button>
-        <label className={`flex cursor-pointer items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ${importing ? 'opacity-50' : ''}`}>
+        <label className={`flex cursor-pointer items-center gap-1.5 rounded-xl border-2 border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 ${importing ? 'opacity-50' : ''}`}>
           <Upload className="h-4 w-4" /> {importing ? 'Importing…' : 'Import'}
           <input type="file" accept=".csv" onChange={handleImport} className="hidden" disabled={importing} />
         </label>
-        <button onClick={() => { setSelectedPost(null); setShowModal(true); }} className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+        <button onClick={() => { setSelectedPost(null); setShowModal(true); }} className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-200 hover:bg-blue-700">
           <Plus className="h-4 w-4" /> New Post
         </button>
       </div>

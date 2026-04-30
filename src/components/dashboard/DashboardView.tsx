@@ -72,8 +72,8 @@ export default function DashboardView() {
 
   return (
     <div>
-      {/* Pull full-bleed: break out of layout's px-6 py-6 */}
-      <div className="-mx-6 -mt-6 mb-6">
+      {/* Pull full-bleed: break out of layout's px-8 and top gap */}
+      <div className="-mx-8 mb-8" style={{ marginTop: 'calc(-32px)' }}>
         <TimeGreeting />
       </div>
 
