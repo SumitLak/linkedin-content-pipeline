@@ -7,7 +7,7 @@ import { Post, STATUS_LABELS, BRAND_COLORS, BrandContext, autoExcerpt } from '@/
 import { FileText, Calendar, TrendingUp, AlertTriangle, Eye, ThumbsUp, Zap } from 'lucide-react';
 import { startOfWeek, endOfWeek } from 'date-fns';
 import TimeGreeting from './TimeGreeting';
-import BannerSettings from './BannerSettings';
+import PageBackgroundUpload from './PageBackgroundUpload';
 
 function StatCard({ label, value, icon: Icon, gradient, sub }: { label: string; value: string | number; icon: React.ElementType; gradient: string; sub?: string }) {
   return (
@@ -79,7 +79,7 @@ export default function DashboardView() {
       </div>
 
       <div className="space-y-6">
-        <BannerSettings />
+        <PageBackgroundUpload />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard label="Total Posts"    value={stats.total}     icon={FileText}      gradient="bg-gradient-to-br from-violet-600 to-purple-700" />
