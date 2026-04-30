@@ -128,10 +128,9 @@ export default function TimeGreeting() {
 
   return (
     <div
-      className="relative mb-8 overflow-hidden rounded-3xl"
+      className="relative overflow-hidden greeting-bg"
       style={{
-        background: cfg.bg,
-        backgroundSize: '300% 300%',
+        backgroundImage: cfg.bg,
         animation: 'gradientShift 10s ease infinite',
         minHeight: 260,
       }}

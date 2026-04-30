@@ -21,7 +21,6 @@ function StatCard({ label, value, icon: Icon, gradient, sub }: { label: string; 
           <Icon className="h-5 w-5" />
         </div>
       </div>
-      {/* Decorative circle */}
       <div className="pointer-events-none absolute -right-4 -bottom-4 h-24 w-24 rounded-full bg-white/10" />
     </div>
   );
@@ -33,7 +32,6 @@ export default function DashboardView() {
 
   const stats = useMemo(() => {
     const now = new Date();
-    const today = now.toISOString().split('T')[0];
     const weekStart = startOfWeek(now, { weekStartsOn: 1 });
     const weekEnd   = endOfWeek(now, { weekStartsOn: 1 });
 
@@ -64,118 +62,128 @@ export default function DashboardView() {
     return { total, thisWeek, upcoming, missingAn, bestByImpressions, bestByEngagement, formatCounts, brandCounts, dayCounts };
   }, [posts]);
 
-  if (loading) return (
-    <div className="flex h-96 items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
-    </div>
-  );
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <TimeGreeting />
-
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Posts"    value={stats.total}    icon={FileText}      gradient="bg-gradient-to-br from-violet-600 to-purple-700" />
-        <StatCard label="This Week"      value={stats.thisWeek} icon={Calendar}      gradient="bg-gradient-to-br from-blue-500 to-cyan-600"     sub="scheduled / live" />
-        <StatCard label="Scheduled"      value={stats.upcoming} icon={TrendingUp}    gradient="bg-gradient-to-br from-amber-500 to-orange-600" />
-        <StatCard label="Need Analytics" value={stats.missingAn} icon={AlertTriangle} gradient="bg-gradient-to-br from-rose-500 to-pink-600"    sub="live without data" />
+    <div>
+      {/* Pull full-bleed: break out of layout's px-6 py-6 */}
+      <div className="-mx-6 -mt-6 mb-6">
+        <TimeGreeting />
       </div>
 
-      {/* Top performers */}
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-700">
-            <Eye className="h-4 w-4 text-blue-500" /> Top by Impressions
-          </h3>
-          {stats.bestByImpressions.length === 0 ? (
-            <p className="text-sm text-gray-400">No analytics yet.</p>
-          ) : stats.bestByImpressions.map(post => {
-            const maxImp = Math.max(...(post.analytics?.map(a => a.impressions) || [0]));
-            return (
-              <div key={post.id} className="flex items-center justify-between rounded-lg px-2 py-1.5 hover:bg-gray-50">
-                <span className="truncate text-sm text-gray-700 max-w-[220px]">
-                  {post.internal_title || autoExcerpt(post.full_post_content) || 'Untitled'}
-                </span>
-                <span className="ml-2 shrink-0 text-sm font-bold text-blue-600">{maxImp.toLocaleString()}</span>
-              </div>
-            );
-          })}
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard label="Total Posts"    value={stats.total}     icon={FileText}      gradient="bg-gradient-to-br from-violet-600 to-purple-700" />
+          <StatCard label="This Week"      value={stats.thisWeek}  icon={Calendar}      gradient="bg-gradient-to-br from-blue-500 to-cyan-600"     sub="scheduled / live" />
+          <StatCard label="Scheduled"      value={stats.upcoming}  icon={TrendingUp}    gradient="bg-gradient-to-br from-amber-500 to-orange-600" />
+          <StatCard label="Need Analytics" value={stats.missingAn} icon={AlertTriangle} gradient="bg-gradient-to-br from-rose-500 to-pink-600"    sub="live without data" />
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-700">
-            <ThumbsUp className="h-4 w-4 text-green-500" /> Top by Engagement Rate
-          </h3>
-          {stats.bestByEngagement.length === 0 ? (
-            <p className="text-sm text-gray-400">No analytics yet.</p>
-          ) : stats.bestByEngagement.map(post => {
-            const maxRate = Math.max(...(post.analytics?.map(a => Number(a.engagement_rate)) || [0]));
-            return (
-              <div key={post.id} className="flex items-center justify-between rounded-lg px-2 py-1.5 hover:bg-gray-50">
-                <span className="truncate text-sm text-gray-700 max-w-[220px]">
-                  {post.internal_title || autoExcerpt(post.full_post_content) || 'Untitled'}
-                </span>
-                <span className="ml-2 shrink-0 text-sm font-bold text-green-600">{maxRate.toFixed(2)}%</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Breakdown charts */}
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="mb-3 text-sm font-bold text-gray-700">Format Breakdown</h3>
-          {Object.keys(stats.formatCounts).length === 0 ? <p className="text-sm text-gray-400">No data.</p> : (
-            <div className="space-y-2">
-              {Object.entries(stats.formatCounts).sort((a, b) => b[1] - a[1]).map(([fmt, count]) => (
-                <div key={fmt} className="flex items-center gap-2">
-                  <span className="w-20 text-xs capitalize text-gray-600">{fmt}</span>
-                  <div className="flex-1 rounded-full bg-gray-100 h-2">
-                    <div className="h-2 rounded-full bg-blue-500" style={{ width: `${(count / stats.total) * 100}%` }} />
-                  </div>
-                  <span className="w-5 text-right text-xs font-medium text-gray-600">{count}</span>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="rounded-2xl border border-gray-200 bg-white p-5">
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-700">
+              <Eye className="h-4 w-4 text-blue-500" /> Top by Impressions
+            </h3>
+            {stats.bestByImpressions.length === 0 ? (
+              <p className="text-sm text-gray-400">No analytics yet.</p>
+            ) : stats.bestByImpressions.map(post => {
+              const maxImp = Math.max(...(post.analytics?.map(a => a.impressions) || [0]));
+              return (
+                <div key={post.id} className="flex items-center justify-between rounded-lg px-2 py-1.5 hover:bg-gray-50">
+                  <span className="truncate text-sm text-gray-700 max-w-[220px]">
+                    {post.internal_title || autoExcerpt(post.full_post_content) || 'Untitled'}
+                  </span>
+                  <span className="ml-2 shrink-0 text-sm font-bold text-blue-600">{maxImp.toLocaleString()}</span>
                 </div>
-              ))}
-            </div>
-          )}
+              );
+            })}
+          </div>
+
+          <div className="rounded-2xl border border-gray-200 bg-white p-5">
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-700">
+              <ThumbsUp className="h-4 w-4 text-green-500" /> Top by Engagement Rate
+            </h3>
+            {stats.bestByEngagement.length === 0 ? (
+              <p className="text-sm text-gray-400">No analytics yet.</p>
+            ) : stats.bestByEngagement.map(post => {
+              const maxRate = Math.max(...(post.analytics?.map(a => Number(a.engagement_rate)) || [0]));
+              return (
+                <div key={post.id} className="flex items-center justify-between rounded-lg px-2 py-1.5 hover:bg-gray-50">
+                  <span className="truncate text-sm text-gray-700 max-w-[220px]">
+                    {post.internal_title || autoExcerpt(post.full_post_content) || 'Untitled'}
+                  </span>
+                  <span className="ml-2 shrink-0 text-sm font-bold text-green-600">{maxRate.toFixed(2)}%</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="mb-3 text-sm font-bold text-gray-700">Brand / Context</h3>
-          {Object.keys(stats.brandCounts).length === 0 ? <p className="text-sm text-gray-400">No data.</p> : (
-            <div className="flex flex-wrap gap-1.5">
-              {Object.entries(stats.brandCounts).sort((a, b) => b[1] - a[1]).map(([brand, count]) => (
-                <span key={brand} className={`rounded-full px-2.5 py-1 text-xs font-semibold ${BRAND_COLORS[brand as BrandContext] || 'bg-gray-100 text-gray-600'}`}>
-                  {brand} · {count}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="mb-3 flex items-center gap-1.5 text-sm font-bold text-gray-700">
-            <Zap className="h-4 w-4 text-amber-500" /> Posting Days
-          </h3>
-          {Object.keys(stats.dayCounts).length === 0 ? <p className="text-sm text-gray-400">No data.</p> : (
-            <div className="space-y-1.5">
-              {['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map(d => {
-                const count = stats.dayCounts[d] || 0;
-                if (!count) return null;
-                return (
-                  <div key={d} className="flex items-center gap-2">
-                    <span className="w-20 text-xs text-gray-600">{d.slice(0,3)}</span>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+          <div className="rounded-2xl border border-gray-200 bg-white p-5">
+            <h3 className="mb-3 text-sm font-bold text-gray-700">Format Breakdown</h3>
+            {Object.keys(stats.formatCounts).length === 0 ? (
+              <p className="text-sm text-gray-400">No data.</p>
+            ) : (
+              <div className="space-y-2">
+                {Object.entries(stats.formatCounts).sort((a, b) => b[1] - a[1]).map(([fmt, count]) => (
+                  <div key={fmt} className="flex items-center gap-2">
+                    <span className="w-20 text-xs capitalize text-gray-600">{fmt}</span>
                     <div className="flex-1 rounded-full bg-gray-100 h-2">
-                      <div className="h-2 rounded-full bg-amber-400" style={{ width: `${(count / stats.total) * 100}%` }} />
+                      <div className="h-2 rounded-full bg-blue-500" style={{ width: `${(count / stats.total) * 100}%` }} />
                     </div>
                     <span className="w-5 text-right text-xs font-medium text-gray-600">{count}</span>
                   </div>
-                );
-              })}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-2xl border border-gray-200 bg-white p-5">
+            <h3 className="mb-3 text-sm font-bold text-gray-700">Brand / Context</h3>
+            {Object.keys(stats.brandCounts).length === 0 ? (
+              <p className="text-sm text-gray-400">No data.</p>
+            ) : (
+              <div className="flex flex-wrap gap-1.5">
+                {Object.entries(stats.brandCounts).sort((a, b) => b[1] - a[1]).map(([brand, count]) => (
+                  <span key={brand} className={`rounded-full px-2.5 py-1 text-xs font-semibold ${BRAND_COLORS[brand as BrandContext] || 'bg-gray-100 text-gray-600'}`}>
+                    {brand} · {count}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-2xl border border-gray-200 bg-white p-5">
+            <h3 className="mb-3 flex items-center gap-1.5 text-sm font-bold text-gray-700">
+              <Zap className="h-4 w-4 text-amber-500" /> Posting Days
+            </h3>
+            {Object.keys(stats.dayCounts).length === 0 ? (
+              <p className="text-sm text-gray-400">No data.</p>
+            ) : (
+              <div className="space-y-1.5">
+                {['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map(d => {
+                  const count = stats.dayCounts[d] || 0;
+                  if (!count) return null;
+                  return (
+                    <div key={d} className="flex items-center gap-2">
+                      <span className="w-20 text-xs text-gray-600">{d.slice(0, 3)}</span>
+                      <div className="flex-1 rounded-full bg-gray-100 h-2">
+                        <div className="h-2 rounded-full bg-amber-400" style={{ width: `${(count / stats.total) * 100}%` }} />
+                      </div>
+                      <span className="w-5 text-right text-xs font-medium text-gray-600">{count}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

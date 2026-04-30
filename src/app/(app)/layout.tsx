@@ -8,7 +8,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <ProfileProvider>
       <div className="min-h-screen">
         <TopBar />
-        <main className="pt-14 p-6">
+        <main className="pt-[72px] px-6 py-6">
           {children}
         </main>
       </div>
