@@ -67,19 +67,19 @@ export const STATUS_LABELS: Record<PostStatus, string> = {
 };
 
 export const STATUS_COLORS: Record<PostStatus, string> = {
-  ideation: 'bg-slate-100 text-slate-700',
-  scheduled: 'bg-amber-100 text-amber-700',
-  live: 'bg-green-100 text-green-700',
-  analytics_added: 'bg-blue-100 text-blue-700',
-  archived: 'bg-gray-100 text-gray-500',
+  ideation:        'bg-violet-100 text-violet-700',
+  scheduled:       'bg-amber-100  text-amber-700',
+  live:            'bg-emerald-100 text-emerald-700',
+  analytics_added: 'bg-blue-100   text-blue-700',
+  archived:        'bg-gray-100   text-gray-500',
 };
 
-export const BOARD_COLUMNS: { status: PostStatus; label: string; colBg: string; headerBg: string; emptyText: string }[] = [
-  { status: 'ideation',       label: 'Ideation',        colBg: 'bg-slate-100/70',  headerBg: 'bg-slate-200/80 text-slate-700',  emptyText: 'Add your ideas here' },
-  { status: 'scheduled',      label: 'Scheduled',       colBg: 'bg-amber-50/80',   headerBg: 'bg-amber-100 text-amber-800',     emptyText: 'Posts scheduled to publish' },
-  { status: 'live',           label: 'Live',            colBg: 'bg-green-50/80',   headerBg: 'bg-green-100 text-green-800',     emptyText: 'Posts live on LinkedIn' },
-  { status: 'analytics_added', label: 'Analytics Added', colBg: 'bg-blue-50/80',   headerBg: 'bg-blue-100 text-blue-800',       emptyText: 'Analytics tracked' },
-  { status: 'archived',       label: 'Archived',        colBg: 'bg-gray-100/70',   headerBg: 'bg-gray-200 text-gray-600',       emptyText: 'Archived posts' },
+export const BOARD_COLUMNS: { status: PostStatus; label: string; colBg: string; headerBg: string; accentBar: string; emptyText: string }[] = [
+  { status: 'ideation',        label: 'Ideation',        colBg: 'bg-violet-50',  headerBg: 'bg-violet-600 text-white',  accentBar: 'bg-violet-500',  emptyText: 'Drop your ideas here' },
+  { status: 'scheduled',       label: 'Scheduled',       colBg: 'bg-amber-50',   headerBg: 'bg-amber-500  text-white',  accentBar: 'bg-amber-400',   emptyText: 'Posts ready to go live' },
+  { status: 'live',            label: '🟢 Live',          colBg: 'bg-emerald-50', headerBg: 'bg-emerald-600 text-white', accentBar: 'bg-emerald-500', emptyText: 'Posts published on LinkedIn' },
+  { status: 'analytics_added', label: 'Analytics Added', colBg: 'bg-blue-50',    headerBg: 'bg-blue-600   text-white',  accentBar: 'bg-blue-500',    emptyText: 'Analytics tracked ✓' },
+  { status: 'archived',        label: 'Archived',        colBg: 'bg-gray-100',   headerBg: 'bg-gray-500   text-white',  accentBar: 'bg-gray-400',    emptyText: 'Archived posts' },
 ];
 
 export const BRAND_COLORS: Record<BrandContext, string> = {

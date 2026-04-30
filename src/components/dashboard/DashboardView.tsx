@@ -5,21 +5,24 @@ import { usePosts } from '@/hooks/usePosts';
 import { useProfile } from '@/hooks/useProfile';
 import { Post, STATUS_LABELS, BRAND_COLORS, BrandContext, autoExcerpt } from '@/types';
 import { FileText, Calendar, TrendingUp, AlertTriangle, Eye, ThumbsUp, Zap } from 'lucide-react';
-import { startOfWeek, endOfWeek, isAfter } from 'date-fns';
+import { startOfWeek, endOfWeek } from 'date-fns';
+import TimeGreeting from './TimeGreeting';
 
-function StatCard({ label, value, icon: Icon, color, sub }: { label: string; value: string | number; icon: React.ElementType; color: string; sub?: string }) {
+function StatCard({ label, value, icon: Icon, gradient, sub }: { label: string; value: string | number; icon: React.ElementType; gradient: string; sub?: string }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5">
+    <div className={`relative overflow-hidden rounded-2xl p-5 text-white ${gradient}`}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-gray-500">{label}</p>
-          <p className="mt-1 text-3xl font-bold text-gray-900">{value}</p>
-          {sub && <p className="mt-0.5 text-xs text-gray-400">{sub}</p>}
+          <p className="text-sm font-medium text-white/70">{label}</p>
+          <p className="mt-1 text-4xl font-black">{value}</p>
+          {sub && <p className="mt-1 text-xs text-white/60">{sub}</p>}
         </div>
-        <div className={`rounded-xl p-2.5 ${color}`}>
+        <div className="rounded-xl bg-white/20 p-2.5">
           <Icon className="h-5 w-5" />
         </div>
       </div>
+      {/* Decorative circle */}
+      <div className="pointer-events-none absolute -right-4 -bottom-4 h-24 w-24 rounded-full bg-white/10" />
     </div>
   );
 }
@@ -69,19 +72,14 @@ export default function DashboardView() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          {isAllProfiles ? 'All Profiles' : activeProfile?.name}
-        </h1>
-        <p className="text-sm text-gray-500">LinkedIn content pipeline overview</p>
-      </div>
+      <TimeGreeting />
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Posts" value={stats.total} icon={FileText} color="bg-blue-100 text-blue-600" />
-        <StatCard label="This Week" value={stats.thisWeek} icon={Calendar} color="bg-green-100 text-green-600" sub="posts scheduled/live" />
-        <StatCard label="Scheduled" value={stats.upcoming} icon={TrendingUp} color="bg-amber-100 text-amber-600" />
-        <StatCard label="Need Analytics" value={stats.missingAn} icon={AlertTriangle} color="bg-red-100 text-red-500" sub="live posts without data" />
+        <StatCard label="Total Posts"    value={stats.total}    icon={FileText}      gradient="bg-gradient-to-br from-violet-600 to-purple-700" />
+        <StatCard label="This Week"      value={stats.thisWeek} icon={Calendar}      gradient="bg-gradient-to-br from-blue-500 to-cyan-600"     sub="scheduled / live" />
+        <StatCard label="Scheduled"      value={stats.upcoming} icon={TrendingUp}    gradient="bg-gradient-to-br from-amber-500 to-orange-600" />
+        <StatCard label="Need Analytics" value={stats.missingAn} icon={AlertTriangle} gradient="bg-gradient-to-br from-rose-500 to-pink-600"    sub="live without data" />
       </div>
 
       {/* Top performers */}

@@ -45,15 +45,15 @@ export default function TopBar() {
   const displayName = isAllProfiles ? 'All Profiles' : activeProfile?.name || 'Select Profile';
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center border-b border-gray-200 bg-white px-4">
+    <header className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center border-b border-blue-900/20 bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 px-4 shadow-lg">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 pr-6 border-r border-gray-200">
-        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-600">
+      <div className="flex items-center gap-2.5 pr-6 border-r border-white/10">
+        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-white/15 ring-1 ring-white/20">
           <span className="text-xs font-black text-white">in</span>
         </div>
         <div className="hidden sm:block">
-          <p className="text-[12px] font-bold leading-tight text-gray-900">LinkedIn</p>
-          <p className="text-[10px] font-semibold leading-tight text-blue-600">Content Pipeline</p>
+          <p className="text-[12px] font-bold leading-tight text-white">LinkedIn</p>
+          <p className="text-[10px] font-semibold leading-tight text-blue-300">Content Pipeline</p>
         </div>
       </div>
 
@@ -68,8 +68,8 @@ export default function TopBar() {
               className={clsx(
                 'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                 isActive
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-white/15 text-white'
+                  : 'text-blue-200 hover:bg-white/10 hover:text-white'
               )}
             >
               <Icon className="h-4 w-4" />
@@ -83,12 +83,7 @@ export default function TopBar() {
       <div ref={ref} className="relative ml-auto">
         <button
           onClick={() => setOpen(!open)}
-          className={clsx(
-            'flex items-center gap-2 rounded-xl border-2 px-3 py-1.5 text-sm font-semibold transition-colors',
-            isAllProfiles
-              ? 'border-purple-300 bg-purple-50 text-purple-700'
-              : 'border-blue-200 bg-blue-50 text-blue-700'
-          )}
+          className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/20"
         >
           {!isAllProfiles && activeProfile ? (
             <Avatar profile={activeProfile} size="sm" />
