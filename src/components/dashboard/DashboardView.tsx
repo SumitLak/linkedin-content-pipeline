@@ -8,6 +8,7 @@ import { FileText, Calendar, TrendingUp, AlertTriangle, Eye, ThumbsUp, Zap } fro
 import { startOfWeek, endOfWeek } from 'date-fns';
 import TimeGreeting from './TimeGreeting';
 import PageBackgroundUpload from './PageBackgroundUpload';
+import DashboardBannerSettings from './DashboardBannerSettings';
 
 function StatCard({ label, value, icon: Icon, gradient, sub }: { label: string; value: string | number; icon: React.ElementType; gradient: string; sub?: string }) {
   return (
@@ -79,8 +80,6 @@ export default function DashboardView() {
       </div>
 
       <div className="space-y-6">
-        <PageBackgroundUpload />
-
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard label="Total Posts"    value={stats.total}     icon={FileText}      gradient="bg-gradient-to-br from-violet-600 to-purple-700" />
           <StatCard label="This Week"      value={stats.thisWeek}  icon={Calendar}      gradient="bg-gradient-to-br from-blue-500 to-cyan-600"     sub="scheduled / live" />
@@ -187,6 +186,12 @@ export default function DashboardView() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* ── Customisation settings ── */}
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <DashboardBannerSettings />
+          <PageBackgroundUpload />
         </div>
       </div>
     </div>
