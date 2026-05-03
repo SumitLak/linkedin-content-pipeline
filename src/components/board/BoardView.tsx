@@ -36,13 +36,11 @@ export default function BoardView() {
     return Array.from(years).sort((a, b) => a - b);
   }, [posts]);
 
-  // Filtered posts
+  // Filtered posts — Ideation always visible so inspiration posts are accessible
   const filteredPosts = useMemo(() => {
     return posts.filter(p => {
-      if (!p.posting_date) {
-        // Posts with no date only show when no filter is active
-        return filterYear === null && filterMonth === null;
-      }
+      if (p.status === 'ideation') return true;
+      if (!p.posting_date) return filterYear === null && filterMonth === null;
       const d = new Date(p.posting_date);
       if (filterYear  !== null && d.getFullYear() !== filterYear)  return false;
       if (filterMonth !== null && d.getMonth()    !== filterMonth) return false;
