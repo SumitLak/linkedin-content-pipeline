@@ -7,12 +7,14 @@ import { usePosts } from '@/hooks/usePosts';
 import { BOARD_COLUMNS, PostStatus, Post } from '@/types';
 import PostCard from '@/components/ui/PostCard';
 import PostModal from '@/components/ui/PostModal';
+import BoardImportModal from './BoardImportModal';
 
 export default function BoardView() {
   const { posts, loading, updatePostStatus, createPost, updatePost, deletePost } = usePosts();
   const [showModal, setShowModal] = useState(false);
   const [modalStatus, setModalStatus] = useState<PostStatus>('ideation');
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [showImport, setShowImport] = useState(false);
 
   function handleDragEnd(result: DropResult) {
     if (!result.destination) return;
@@ -60,7 +62,13 @@ export default function BoardView() {
   return (
     <>
       {/* Toolbar */}
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex items-center justify-end gap-2">
+        <button
+          onClick={() => setShowImport(true)}
+          className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+        >
+          <Plus className="h-4 w-4" /> Paste List
+        </button>
         <button
           onClick={() => openCreate('ideation')}
           className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-200 hover:bg-blue-700 transition-colors"
@@ -142,6 +150,15 @@ export default function BoardView() {
           onSave={handleSave}
           onDelete={selectedPost ? handleDelete : undefined}
           onClose={() => { setShowModal(false); setSelectedPost(null); }}
+        />
+      )}
+
+      {showImport && (
+        <BoardImportModal
+          onImport={async (rows) => {
+            for (const row of rows) await createPost(row);
+          }}
+          onClose={() => setShowImport(false)}
         />
       )}
     </>

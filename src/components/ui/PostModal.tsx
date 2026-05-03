@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Trash2, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import EmojiPickerButton from './EmojiPickerButton';
 import {
   Post, Analytics, BRAND_CONTEXTS, POST_FORMATS, POST_STATUSES, STATUS_LABELS,
   POSTING_DAYS, PostStatus, BrandContext, PostFormat, PostingDay,
@@ -31,6 +32,7 @@ export default function PostModal({ post, initialStatus, onSave, onDelete, onClo
   const [excerptManual, setExcerptManual] = useState(!!post?.excerpt);
   const [showAnalyticsForm, setShowAnalyticsForm] = useState(false);
   const [analyticsEntries, setAnalyticsEntries] = useState<Analytics[]>(post?.analytics || []);
+  const contentRef = useRef<HTMLTextAreaElement>(null);
 
   const [form, setForm] = useState({
     full_post_content:   post?.full_post_content   || '',
@@ -214,14 +216,25 @@ export default function PostModal({ post, initialStatus, onSave, onDelete, onClo
               {/* Full Post Content — main field */}
               <div>
                 <label className={labelClass}>Full Post Content *</label>
-                <textarea
-                  className={`${inputClass} font-mono text-[13px]`}
-                  rows={10}
-                  value={form.full_post_content}
-                  onChange={e => update('full_post_content', e.target.value)}
-                  placeholder="Paste your complete LinkedIn post here — caption, body, CTA, hashtags..."
-                  required
-                />
+                <div className="relative">
+                  <textarea
+                    ref={contentRef}
+                    className={`${inputClass} font-mono text-[13px]`}
+                    rows={10}
+                    value={form.full_post_content}
+                    onChange={e => update('full_post_content', e.target.value)}
+                    placeholder="Paste your complete LinkedIn post here — caption, body, CTA, hashtags..."
+                    required
+                  />
+                  <div className="absolute bottom-2 right-2">
+                    <EmojiPickerButton
+                      textareaRef={contentRef}
+                      onInsert={(newValue, newCursor) => {
+                        update('full_post_content', newValue);
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Excerpt */}
