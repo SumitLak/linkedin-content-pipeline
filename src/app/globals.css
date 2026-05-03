@@ -76,3 +76,10 @@ body {
 .animate-fade-in {
   animation: fadeIn 0.8s ease both;
 }
+
+/* Placeholder for contenteditable rich-text fields */
+[contenteditable][data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: #9ca3af;
+  pointer-events: none;
+}

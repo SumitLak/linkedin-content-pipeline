@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Trash2, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
-import EmojiPickerButton from './EmojiPickerButton';
 import {
   Post, Analytics, BRAND_CONTEXTS, POST_FORMATS, POST_STATUSES, STATUS_LABELS,
   POSTING_DAYS, PostStatus, BrandContext, PostFormat, PostingDay,
@@ -32,7 +31,15 @@ export default function PostModal({ post, initialStatus, onSave, onDelete, onClo
   const [excerptManual, setExcerptManual] = useState(!!post?.excerpt);
   const [showAnalyticsForm, setShowAnalyticsForm] = useState(false);
   const [analyticsEntries, setAnalyticsEntries] = useState<Analytics[]>(post?.analytics || []);
-  const contentRef = useRef<HTMLTextAreaElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Seed contenteditable on mount only (avoids React fighting cursor position)
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.innerHTML = form.full_post_content || '';
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [form, setForm] = useState({
     full_post_content:   post?.full_post_content   || '',
@@ -213,28 +220,19 @@ export default function PostModal({ post, initialStatus, onSave, onDelete, onClo
         <div className="flex-1 overflow-y-auto">
           {activeTab === 'overview' && (
             <form id="post-form" onSubmit={handleSave} className="space-y-4 p-6">
-              {/* Full Post Content — main field */}
+              {/* Full Post Content — rich text field */}
               <div>
                 <label className={labelClass}>Full Post Content *</label>
-                <div className="relative">
-                  <textarea
-                    ref={contentRef}
-                    className={`${inputClass} font-mono text-[13px]`}
-                    rows={10}
-                    value={form.full_post_content}
-                    onChange={e => update('full_post_content', e.target.value)}
-                    placeholder="Paste your complete LinkedIn post here — caption, body, CTA, hashtags..."
-                    required
-                  />
-                  <div className="absolute bottom-2 right-2">
-                    <EmojiPickerButton
-                      textareaRef={contentRef}
-                      onInsert={(newValue, newCursor) => {
-                        update('full_post_content', newValue);
-                      }}
-                    />
-                  </div>
-                </div>
+                <div
+                  ref={contentRef}
+                  contentEditable
+                  suppressContentEditableWarning
+                  onInput={e => update('full_post_content', (e.currentTarget as HTMLDivElement).innerHTML)}
+                  className="min-h-[200px] w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 whitespace-pre-wrap break-words"
+                  style={{ lineHeight: '1.6' }}
+                  data-placeholder="Paste your complete LinkedIn post here — emojis, line breaks and formatting are preserved…"
+                />
+                <p className="mt-0.5 text-[11px] text-gray-400">Paste directly from LinkedIn, Word or any source — formatting is preserved</p>
               </div>
 
               {/* Excerpt */}
