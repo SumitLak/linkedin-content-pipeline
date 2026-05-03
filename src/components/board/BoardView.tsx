@@ -59,6 +59,16 @@ export default function BoardView() {
 
   return (
     <>
+      {/* Toolbar */}
+      <div className="mb-4 flex justify-end">
+        <button
+          onClick={() => openCreate('ideation')}
+          className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-200 hover:bg-blue-700 transition-colors"
+        >
+          <Plus className="h-4 w-4" /> New Post
+        </button>
+      </div>
+
       <DragDropContext onDragEnd={handleDragEnd}>
         {/* px-8 on the scroll container keeps equal padding on both sides even when overflowing */}
         <div className="-mx-8 flex gap-3 overflow-x-auto px-8 pb-6" style={{ minHeight: 'calc(100vh - 7rem)' }}>
