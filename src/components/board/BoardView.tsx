@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { Plus, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { usePosts } from '@/hooks/usePosts';
 import { useProfile } from '@/hooks/useProfile';
 import { BOARD_COLUMNS, PostStatus, Post } from '@/types';
@@ -109,69 +109,43 @@ export default function BoardView() {
   return (
     <>
       {/* Toolbar */}
-      <div className="mb-4 flex items-center gap-3 flex-wrap">
+      <div className="mb-4 flex items-center gap-2 flex-wrap">
 
-        {/* Month / Year navigator */}
-        <div className="flex items-center gap-1 rounded-xl border-2 border-gray-200 bg-white px-1 py-1">
-          <button onClick={prevMonth} disabled={filterMonth === null} className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-30">
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-
-          {/* Month pills */}
-          <div className="flex gap-0.5">
-            {MONTHS.map((m, i) => (
-              <button
-                key={m}
-                onClick={() => setFilterMonth(filterMonth === i ? null : i)}
-                className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors ${
-                  filterMonth === i
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800'
-                }`}
-              >
-                {m}
-              </button>
-            ))}
-          </div>
-
-          <button onClick={nextMonth} disabled={filterMonth === null} className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-30">
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* Year pills */}
-        <div className="flex items-center gap-1 rounded-xl border-2 border-gray-200 bg-white px-2 py-1">
-          {availableYears.map(y => (
-            <button
-              key={y}
-              onClick={() => setFilterYear(filterYear === y ? null : y)}
-              className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
-                filterYear === y
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800'
-              }`}
-            >
-              {y}
-            </button>
+        {/* Month dropdown */}
+        <select
+          value={filterMonth ?? ''}
+          onChange={e => setFilterMonth(e.target.value === '' ? null : Number(e.target.value))}
+          className="rounded-xl border-2 border-gray-200 bg-white px-3 py-2.5 text-sm font-medium text-gray-700 focus:border-blue-400 focus:outline-none hover:border-blue-200 transition-colors"
+        >
+          <option value="">All Months</option>
+          {FULL_MONTHS.map((m, i) => (
+            <option key={m} value={i}>{m}</option>
           ))}
-        </div>
+        </select>
 
-        {/* Clear filter */}
-        {hasFilter && (
-          <button
-            onClick={() => { setFilterYear(null); setFilterMonth(null); }}
-            className="flex items-center gap-1 rounded-xl border-2 border-gray-200 px-3 py-2 text-xs font-medium text-gray-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600 transition-colors"
-          >
-            <X className="h-3.5 w-3.5" /> All posts
-          </button>
-        )}
+        {/* Year dropdown */}
+        <select
+          value={filterYear ?? ''}
+          onChange={e => setFilterYear(e.target.value === '' ? null : Number(e.target.value))}
+          className="rounded-xl border-2 border-gray-200 bg-white px-3 py-2.5 text-sm font-medium text-gray-700 focus:border-blue-400 focus:outline-none hover:border-blue-200 transition-colors"
+        >
+          <option value="">All Years</option>
+          {availableYears.map(y => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
 
-        {/* Active filter label */}
+        {/* Post count + clear */}
         {hasFilter && (
-          <span className="text-sm font-semibold text-gray-500">
-            {filterMonth !== null ? FULL_MONTHS[filterMonth] : ''}{filterYear !== null ? ` ${filterYear}` : ''}
-            <span className="ml-1.5 text-gray-400 font-normal">· {filteredPosts.length} posts</span>
-          </span>
+          <>
+            <span className="text-sm text-gray-400">{filteredPosts.length} posts</span>
+            <button
+              onClick={() => { setFilterYear(null); setFilterMonth(null); }}
+              className="flex items-center gap-1 rounded-xl border-2 border-gray-200 px-3 py-2 text-xs font-medium text-gray-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600 transition-colors"
+            >
+              <X className="h-3.5 w-3.5" /> Clear
+            </button>
+          </>
         )}
 
         <div className="ml-auto flex items-center gap-2">
