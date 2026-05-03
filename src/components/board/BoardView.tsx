@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Plus } from 'lucide-react';
 import { usePosts } from '@/hooks/usePosts';
+import { useProfile } from '@/hooks/useProfile';
 import { BOARD_COLUMNS, PostStatus, Post } from '@/types';
 import PostCard from '@/components/ui/PostCard';
 import PostModal from '@/components/ui/PostModal';
@@ -11,6 +12,7 @@ import BoardImportModal from './BoardImportModal';
 
 export default function BoardView() {
   const { posts, loading, updatePostStatus, createPost, updatePost, deletePost } = usePosts();
+  const { activeProfile } = useProfile();
   const [showModal, setShowModal] = useState(false);
   const [modalStatus, setModalStatus] = useState<PostStatus>('ideation');
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -156,7 +158,9 @@ export default function BoardView() {
       {showImport && (
         <BoardImportModal
           onImport={async (rows) => {
-            for (const row of rows) await createPost(row);
+            for (const row of rows) {
+              await createPost({ ...row, profile_id: activeProfile?.id });
+            }
           }}
           onClose={() => setShowImport(false)}
         />
