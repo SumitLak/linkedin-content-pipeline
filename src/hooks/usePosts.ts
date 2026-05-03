@@ -55,13 +55,27 @@ export function usePosts() {
   };
 
   const createPost = async (post: Partial<Post>) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('posts')
       .insert(post)
       .select('*, analytics(*), profiles(*)')
       .single();
+    if (error) console.error('createPost error:', error);
     if (data) setPosts(prev => [data, ...prev]);
     return data;
+  };
+
+  const bulkCreatePosts = async (posts: Partial<Post>[]) => {
+    const { data, error } = await supabase
+      .from('posts')
+      .insert(posts)
+      .select('*, analytics(*), profiles(*)');
+    if (error) {
+      console.error('bulkCreatePosts error:', error);
+      return false;
+    }
+    if (data) setPosts(prev => [...data, ...prev]);
+    return true;
   };
 
   const updatePost = async (id: string, updates: Partial<Post>) => {
@@ -96,5 +110,5 @@ export function usePosts() {
     return data;
   };
 
-  return { posts, loading, fetchPosts, updatePostStatus, createPost, updatePost, deletePost, addAnalytics };
+  return { posts, loading, fetchPosts, updatePostStatus, createPost, bulkCreatePosts, updatePost, deletePost, addAnalytics };
 }

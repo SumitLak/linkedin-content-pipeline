@@ -11,7 +11,7 @@ import PostModal from '@/components/ui/PostModal';
 import BoardImportModal from './BoardImportModal';
 
 export default function BoardView() {
-  const { posts, loading, updatePostStatus, createPost, updatePost, deletePost } = usePosts();
+  const { posts, loading, updatePostStatus, createPost, bulkCreatePosts, updatePost, deletePost, fetchPosts } = usePosts();
   const { activeProfile } = useProfile();
   const [showModal, setShowModal] = useState(false);
   const [modalStatus, setModalStatus] = useState<PostStatus>('ideation');
@@ -158,8 +158,14 @@ export default function BoardView() {
       {showImport && (
         <BoardImportModal
           onImport={async (rows) => {
-            for (const row of rows) {
-              await createPost({ ...row, profile_id: activeProfile?.id });
+            const postsToInsert = rows.map(row => ({
+              ...row,
+              profile_id: activeProfile?.id,
+            }));
+            const ok = await bulkCreatePosts(postsToInsert);
+            if (ok) {
+              await fetchPosts();
+              setShowImport(false);
             }
           }}
           onClose={() => setShowImport(false)}

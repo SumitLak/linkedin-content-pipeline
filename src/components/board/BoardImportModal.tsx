@@ -94,6 +94,7 @@ export default function BoardImportModal({ onImport, onClose }: Props) {
   const [rows, setRows] = useState<ParsedRow[]>([]);
   const [importing, setImporting] = useState(false);
   const [done, setDone] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
 
   function handleParse() {
     setRows(parseTSV(text));
@@ -109,10 +110,14 @@ export default function BoardImportModal({ onImport, onClose }: Props) {
       status:            normaliseStatus(r.status || ''),
       linkedin_url:      r.linkedin_url      || null,
     }));
-    await onImport(posts);
-    setImporting(false);
-    setDone(true);
-    setTimeout(onClose, 1200);
+    try {
+      await onImport(posts);
+      setDone(true);
+    } catch (e: any) {
+      setImportError(e?.message || 'Import failed. Check the console for details.');
+    } finally {
+      setImporting(false);
+    }
   }
 
   const modal = (
@@ -205,19 +210,26 @@ export default function BoardImportModal({ onImport, onClose }: Props) {
           <button onClick={onClose} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
             Cancel
           </button>
-          {done ? (
-            <span className="flex items-center gap-2 text-sm font-semibold text-green-600">
-              <CheckCircle2 className="h-4 w-4" /> Imported!
-            </span>
-          ) : (
-            <button
-              onClick={handleImport}
-              disabled={rows.length === 0 || importing}
-              className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-40 transition-colors"
-            >
-              {importing ? 'Importing…' : `Import ${rows.length} Posts`}
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {importError && (
+              <span className="flex items-center gap-1.5 text-sm text-red-600">
+                <AlertCircle className="h-4 w-4" /> {importError}
+              </span>
+            )}
+            {done ? (
+              <span className="flex items-center gap-2 text-sm font-semibold text-green-600">
+                <CheckCircle2 className="h-4 w-4" /> Imported!
+              </span>
+            ) : (
+              <button
+                onClick={handleImport}
+                disabled={rows.length === 0 || importing}
+                className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-40 transition-colors"
+              >
+                {importing ? 'Importing…' : `Import ${rows.length} Posts`}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
